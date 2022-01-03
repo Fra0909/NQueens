@@ -7,11 +7,11 @@ class Queens():
         self.size = size
         self.solutions = []
 
-    def getSolutions(self):
+    def getAllSolutions(self):
         self.findSolutions([0] * self.size)
         return self.solutions
 
-    def findSolutions(self, queens, row=0, column=0):
+    def findAllSolutions(self, queens, row=0, column=0):
         if row == self.size:
             self.solutions.append(queens.copy())
             return True
