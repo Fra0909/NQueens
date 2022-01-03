@@ -5,33 +5,26 @@ class Queens():
 
     def __init__(self, size):
         self.size = size
-        self.answers = 0
         self.solutions = []
 
-    def calculate(self):
-        queens = [0] * self.size
-        self.solve(queens, 0, 0)
+    def getSolutions(self):
+        self.findSolutions([0] * self.size)
         return self.solutions
 
-    def solve(self, queens, row, column):
+    def findSolutions(self, queens, row=0, column=0):
         if row == self.size:
-            self.answers += 1
             self.solutions.append(queens.copy())
             return True
         else:
             while column < self.size:
-                if self.check(queens, row, column):
+                if self.isClash(queens, row, column):
                     queens[row] = column
-                    self.solve(queens, row + 1, 0)
+                    self.findSolutions(queens, row + 1, 0)
                 column += 1
 
-    def check(self, queens, row, column):
+    def isClash(self, queens, row, column):
         for i in range(row):
-            if queens[i] == column:
-                return False
-            if column + row == queens[i] + i:
-                return False
-            if column - row == queens[i] - i:
+            if queens[i] == column or column + row == queens[i] + i or column - row == queens[i] - i:
                 return False
         return True
 
@@ -39,6 +32,6 @@ class Queens():
 if __name__ == '__main__':
     size = 8
     board = Queens(size)
-    solutions = board.calculate()
-    gui = GUI.GUI(size,solutions)
-    gui.createBoard()
+    solutions = board.getSolutions()
+    print(len(solutions))
+    gui = GUI.GUI(size, solutions).createBoard()

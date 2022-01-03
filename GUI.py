@@ -7,7 +7,7 @@ class GUI():
         self.size = size
         self.solutions = solutions
 
-    def get_new_solution(self, index, step):
+    def getNewSolution(self, index, step):
         if index == len(self.solutions)-1 and step:
             self.createBoard(0)
             return
@@ -37,13 +37,13 @@ class GUI():
                     last_colour = True
 
                 label.grid(row = i,column = j)
-        prev = Button(root, text ='<', command = lambda: self.get_new_solution(index,False))
+        prev = Button(root, text ='<', command = lambda: self.getNewSolution(index, False))
         prev.grid(row = self.size, column = int(self.size)-3)
-        zero = Button(root, text='⌂', command=lambda: self.get_new_solution(len(self.solutions)-1, False))
+        zero = Button(root, text='⌂', command=lambda: self.getNewSolution(len(self.solutions) - 1, False))
         zero.grid(row=self.size, column=int(self.size) - 2)
         label2 = Label(root,text ='{}/{}'.format(index+1,len(self.solutions)))
         label2.grid(row = self.size,column=0)
-        next = Button(root, text='>', command = lambda: self.get_new_solution(index,True))
+        next = Button(root, text='>', command = lambda: self.getNewSolution(index, True))
         next.grid(row=self.size, column=int(self.size)-1)
         root.title("NQueens")
         root.mainloop()
