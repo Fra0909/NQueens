@@ -1,4 +1,4 @@
-import GUI
+import GUI, time, math
 
 
 class Queens():
@@ -30,8 +30,7 @@ class Queens():
 
 
 if __name__ == '__main__':
-    size = 9
-    board = Queens(size)
-    solutions = board.getAllSolutions()
-    print(len(solutions))
-    gui = GUI.GUI(solutions)
+    size = 8
+    gui = GUI.GUI(Queens(size).getAllSolutions())
+
+
