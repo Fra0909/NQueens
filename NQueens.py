@@ -30,8 +30,8 @@ class Queens():
 
 
 if __name__ == '__main__':
-    size = 8
+    size = 6
     board = Queens(size)
     solutions = board.getSolutions()
     print(len(solutions))
-    gui = GUI.GUI(size, solutions).createBoard()
+    gui = GUI.GUI(solutions)

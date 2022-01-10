@@ -1,49 +1,78 @@
 from tkinter import *
+
 root = Tk()
+
 
 class GUI():
 
-    def __init__(self, size, solutions):
-        self.size = size
+    def __init__(self, solutions):
         self.solutions = solutions
+        self.current_solution = solutions[0]
+        self.size = len(self.current_solution)
+        self.grid = self.getGrid()
+        self.placeQueens()
 
-    def getNewSolution(self, index, step):
-        if index == len(self.solutions)-1 and step:
-            self.createBoard(0)
-            return
-        if index == 0 and not step:
-            self.createBoard(len(self.solutions)-1)
-            return
-        if step:
-            print(index)
-            self.createBoard(index+1)
-            return
-        self.createBoard(index-1)
-
-    def createBoard(self, index = 0, last_colour = True):
-        solutions = self.solutions[index]
-        for i in range(self.size):
-            last_colour = not last_colour if self.size %2 == 0 else last_colour
-            for j in range (self.size):
-                if solutions[i] == j:
-                    label = Label(root, text = '♛', font=("courier",8), width = 8, height = 4, fg='yellow',)
-                else:
-                    label = Label(root, text='', font=("courier",8), width=8, height=4)
-                if last_colour:
-                    label.config(bg='#000')
-                    last_colour = False
-                else:
-                    label.config(bg='#FFF')
-                    last_colour = True
-
-                label.grid(row = i,column = j)
-        prev = Button(root, text ='<', command = lambda: self.getNewSolution(index, False))
-        prev.grid(row = self.size, column = int(self.size)-3)
-        zero = Button(root, text='⌂', command=lambda: self.getNewSolution(len(self.solutions) - 1, False))
+        prev = Button(root, text='<', command=lambda: self.prevSolution())
+        prev.grid(row=self.size, column=int(self.size) - 3)
+        zero = Button(root, text='⌂', command=lambda: self.firstSolution())
         zero.grid(row=self.size, column=int(self.size) - 2)
-        label2 = Label(root,text ='{}/{}'.format(index+1,len(self.solutions)))
-        label2.grid(row = self.size,column=0)
-        next = Button(root, text='>', command = lambda: self.getNewSolution(index, True))
-        next.grid(row=self.size, column=int(self.size)-1)
+        self.counterLabel = Label(root, text='{}/{}'.format(self.solutions.index(self.current_solution)+1, len(self.solutions)))
+        self.counterLabel.grid(row=self.size, column=0)
+        next = Button(root, text='>', command=lambda: self.nextSolution())
+        next.grid(row=self.size, column=int(self.size) - 1)
         root.title("NQueens")
         root.mainloop()
+
+    def getGrid(self):
+        labels = [[] for x in range(self.size)]
+        colour = False
+        for row in range(self.size):
+            for column in range(self.size):
+                if colour:
+                    labels[row].append(Label(root, text='', font=("courier", 8), width=8, height=4, bg='#000'))
+                else:
+                    labels[row].append(Label(root, text='', font=("courier", 8), width=8, height=4, bg='#FFF'))
+                colour = not colour
+                labels[row][column].grid(row=row, column=column)
+            colour = not colour if self.size % 2 == 0 else colour
+        return labels
+
+    def placeQueens(self):
+        for row in range(self.size):
+            self.grid[row][self.current_solution[row]].config(text='2', fg='red')
+
+    def eraseBoard(self, grid):
+        for row in range(self.size):
+            for column in range(self.size):
+                grid[row][column].config(text='')
+
+    def firstSolution(self):
+        self.eraseBoard(self.grid)
+        self.current_solution = self.solutions[0]
+        self.placeQueens()
+        self.counterLabel.config(
+            text='{}/{}'.format(self.solutions.index(self.current_solution) + 1, len(self.solutions)))
+
+    def nextSolution(self):
+        self.eraseBoard(self.grid)
+        if not(self.solutions.index(self.current_solution)+1 >= len(self.solutions)):
+            self.current_solution = self.solutions[self.solutions.index(self.current_solution) + 1]
+        else:
+            self.current_solution = self.solutions[0]
+
+        self.placeQueens()
+        self.counterLabel.config(
+            text='{}/{}'.format(self.solutions.index(self.current_solution) + 1, len(self.solutions)))
+
+    def prevSolution(self):
+        self.eraseBoard(self.grid)
+        if self.solutions.index(self.current_solution)-1 <= 0:
+            self.current_solution = self.solutions[-1]
+        else:
+            self.current_solution = self.solutions[self.solutions.index(self.current_solution) - 1]
+
+
+        self.placeQueens()
+        self.counterLabel.config(
+            text='{}/{}'.format(self.solutions.index(self.current_solution) - 1, len(self.solutions)))
+
