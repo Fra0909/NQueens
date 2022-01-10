@@ -11,7 +11,7 @@ class Queens():
         self.findSolutions([0] * self.size)
         return self.solutions
 
-    def findAllSolutions(self, queens, row=0, column=0):
+    def findSolutions(self, queens, row=0, column=0):
         if row == self.size:
             self.solutions.append(queens.copy())
             return True
@@ -30,8 +30,8 @@ class Queens():
 
 
 if __name__ == '__main__':
-    size = 6
+    size = 9
     board = Queens(size)
-    solutions = board.getSolutions()
+    solutions = board.getAllSolutions()
     print(len(solutions))
     gui = GUI.GUI(solutions)

@@ -16,7 +16,8 @@ class GUI():
         prev.grid(row=self.size, column=int(self.size) - 3)
         zero = Button(root, text='⌂', command=lambda: self.firstSolution())
         zero.grid(row=self.size, column=int(self.size) - 2)
-        self.counterLabel = Label(root, text='{}/{}'.format(self.solutions.index(self.current_solution)+1, len(self.solutions)))
+        self.counterLabel = Label(root, text='{}/{}'.format(self.solutions.index(self.current_solution) + 1,
+                                                            len(self.solutions)))
         self.counterLabel.grid(row=self.size, column=0)
         next = Button(root, text='>', command=lambda: self.nextSolution())
         next.grid(row=self.size, column=int(self.size) - 1)
@@ -33,18 +34,23 @@ class GUI():
                 else:
                     labels[row].append(Label(root, text='', font=("courier", 8), width=8, height=4, bg='#FFF'))
                 colour = not colour
-                labels[row][column].grid(row=row, column=column)
+                labels[row][column].grid(row=row, column=column, sticky='nesw')
             colour = not colour if self.size % 2 == 0 else colour
         return labels
 
     def placeQueens(self):
         for row in range(self.size):
-            self.grid[row][self.current_solution[row]].config(text='2', fg='red')
+            self.grid[row][self.current_solution[row]].config(text='', bg='#EB3')
 
     def eraseBoard(self, grid):
         for row in range(self.size):
             for column in range(self.size):
-                grid[row][column].config(text='')
+                if self.grid[row][column].cget('bg') == "#EB3" and self.grid[row][column-1].cget('bg') == "#000":
+                    self.grid[row][column].config(bg = "#FFF")
+                elif self.grid[row][column].cget('bg') == '#EB3' and self.grid[row][column-1].cget('bg') == "#FFF":
+                    self.grid[row][column].config(bg = "#000")
+
+
 
     def firstSolution(self):
         self.eraseBoard(self.grid)
@@ -55,7 +61,7 @@ class GUI():
 
     def nextSolution(self):
         self.eraseBoard(self.grid)
-        if not(self.solutions.index(self.current_solution)+1 >= len(self.solutions)):
+        if not (self.solutions.index(self.current_solution) + 1 >= len(self.solutions)):
             self.current_solution = self.solutions[self.solutions.index(self.current_solution) + 1]
         else:
             self.current_solution = self.solutions[0]
@@ -66,13 +72,11 @@ class GUI():
 
     def prevSolution(self):
         self.eraseBoard(self.grid)
-        if self.solutions.index(self.current_solution)-1 <= 0:
+        if self.solutions.index(self.current_solution) <= 0:
             self.current_solution = self.solutions[-1]
         else:
             self.current_solution = self.solutions[self.solutions.index(self.current_solution) - 1]
 
-
         self.placeQueens()
         self.counterLabel.config(
-            text='{}/{}'.format(self.solutions.index(self.current_solution) - 1, len(self.solutions)))
-
+            text='{}/{}'.format(self.solutions.index(self.current_solution) + 1, len(self.solutions)))
